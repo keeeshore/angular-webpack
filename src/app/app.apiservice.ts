@@ -5,12 +5,12 @@ import { Observable }     from 'rxjs/Observable';
 @Injectable()
 export class ApiService {
 
-	private heroesUrl = './responses/test_1.json';
+	private heroesUrl = '';
 
 	constructor (private http: Http) {}
 
-	getHeroes () {
-		return this.http.get(this.heroesUrl)
+	public fetch (url: string) {
+		return this.http.get(url)
 			.map(res => {
 				console.log('res from service:' + JSON.stringify(res.json()));
 				return res.json();
