@@ -15,9 +15,8 @@ var dbUrl = 'mongodb://localhost:27017/test';
 var dbase;
 
 MongoClient.connect(dbUrl, function (err, db) {
-    debugger;
+
     if (!err) {
-        debugger;
         console.log('connection is OK : ' + dbUrl);
         dbase = db;
 
@@ -31,10 +30,11 @@ MongoClient.connect(dbUrl, function (err, db) {
         var classApi = require('./api/class')(expressApp, dbase, mongodb);
         console.log('schoool module loaded :: ' + school);
         console.log('classApi module loaded :: ' + classApi);
-
+        
     } else {
         console.log('Unable to connect to : ' + dbUrl + ' error: ' + err);
     }
+
 });
 
 expressApp.use('/public', proxy(url.parse('http://localhost:8080/public')));
@@ -61,7 +61,7 @@ var server = new WebpackDevServer(compiler, {
     hot: true,
     quiet: false,
     noInfo: false,
-    publicPath: '/public/',
+    publicPath: '/public',
     stats: { colors: true },
     headers: { "Access-Control-Allow-Origin": "*" }
 });

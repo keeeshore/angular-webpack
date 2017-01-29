@@ -12,7 +12,16 @@ export class ApiService {
 	public fetch (url: string) {
 		return this.http.get(url)
 			.map(res => {
-				console.log('res from service:' + JSON.stringify(res.json()));
+				console.log('res from get service:' + JSON.stringify(res.json()));
+				return res.json();
+			})
+			.catch(this.handleError);
+	}
+
+	public post (url: string, data: any) {
+		return this.http.post(url, data)
+			.map(res => {
+				console.log('res from post service:' + JSON.stringify(res.json()));
 				return res.json();
 			})
 			.catch(this.handleError);
