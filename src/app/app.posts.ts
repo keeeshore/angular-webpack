@@ -20,11 +20,13 @@ export class AppPostsComponent {
 
 	private url: string = './responses/test_1.json';
 
+    public DATE_TIME_FORMAT:string = 'DD-MM-YYYY, HH:mm';
+
 	private action: string = 'ADD';
 
-	private fromDate: string = moment().subtract(2, 'month').format('DD-MM-YYYY');
+	private fromDate: string = moment().subtract(2, 'month').format(this.DATE_TIME_FORMAT);
 
-	private toDate: string = moment().format('DD-MM-YYYY');
+	private toDate: string = moment().format(this.DATE_TIME_FORMAT);
 
 	private accessToken: string = 'EAACEdEose0cBAFHN52Q504qRZB6IJnOibnLv9cWFj3KiHWloNrkJbx33m1xZBlFpTZBOJgOzzF2O1P8GiTMkp473pZCLhEWaFZCNEzu6Yh7YR6VSpASbS4m32cgXcOaFMgZAV21yubjsgdiaZBz8nPFw9pWGtJq86jKEpEnhd1kfgZDZD';
 
@@ -52,28 +54,39 @@ export class AppPostsComponent {
 		});
 	}
 
-	public getPosts() {
-		let fromDate = moment().format('DD-MM-YYYY');
-		let toDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
-		let queryParams = 'since=' + fromDate + '&until=' + toDate;
-		let areDatesValid:boolean = false;
+	public updatePosts() {
+		let fromDate = moment().format(this.DATE_TIME_FORMAT);
+		let toDate = moment().subtract(1, 'month').format(this.DATE_TIME_FORMAT);
 
-		if (moment(this.fromDate, 'DD-MM-YYYY').isValid() && moment(this.toDate, 'DD-MM-YYYY').isValid()) {
-			areDatesValid = true;
+		if (moment(this.fromDate, this.DATE_TIME_FORMAT).isValid() && moment(this.toDate, this.DATE_TIME_FORMAT).isValid()
+            && (moment(this.fromDate, this.DATE_TIME_FORMAT).isBefore(moment(this.toDate, this.DATE_TIME_FORMAT)))) {
+            console.log('is valid date range');
+            fromDate = this.fromDate;
+            toDate = this.toDate;
 		}
 
-		if (areDatesValid && (moment(this.fromDate, 'DD-MM-YYYY').isBefore(moment(this.toDate, 'DD-MM-YYYY')))) {
-			console.log('is valid date rangee');
-			queryParams = 'since=' + this.fromDate + '&until=' + this.toDate;
-		}
-
-		var url = 'http://localhost:4000/api/vimonisha/posts?' + queryParams + '&accessToken=' + this.accessToken;
-		this.apiService.fetch(url).subscribe((res:any) => {
-			console.log('vimonisha posts recieved ' + JSON.stringify(res));
-			this.postCollection = new PostCollection(res.data.id, res.data.posts.data);
-			
+		var url = 'http://localhost:4000/api/vimonisha/update/posts';
+		this.apiService.post(url, {
+		    'accessToken': this.accessToken,
+            'since': fromDate,
+            'until': toDate
+        }).subscribe((res:any) => {
+			console.log('vimonisha updates posts JSON => ' + JSON.stringify(res));
+            if (res.success) {
+                this.fromDate = moment(res.until).format(this.DATE_TIME_FORMAT);
+                this.getPosts();
+            }
 		});
 	}
+
+	public getPosts() {
+        var url = 'http://localhost:4000/api/vimonisha/get/posts';
+        this.apiService.fetch(url).subscribe((res:PostCollection) => {
+            console.log('vimonisha posts recieved ' + JSON.stringify(res));
+            this.postCollection = new PostCollection(res.id, res.posts, res.until);
+            this.fromDate = moment(res.until).add(1, 'm').format(this.DATE_TIME_FORMAT);
+        });
+    }
 
 	public deleteSchool(model:SchoolModel) {
 		console.log('deleteSchool called');

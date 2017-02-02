@@ -1,30 +1,36 @@
 import { PostModel } from './PostModel';
+import {DataType} from "./DataType";
+import {DataTypeEnum} from './DataTypeEnum';
 
-export class PostCollection {
-
+export class PostCollection implements DataType {
 
 	public posts:Array<PostModel> = [];
 
 	public id:number;
 
-	constructor (id:number, posts:Array<PostModel>) {
+    public type:DataTypeEnum = DataTypeEnum.POST;
+
+    public until:string;
+
+	constructor (id:number, posts:Array<PostModel>, until:string) {
 		console.log('PostCollection init.....');
-		this.id = id;
+		this.setId(id);
+        this.until = until;
 		this.addPosts(posts);
 	}
 
-	public addPosts (posts:Array<PostModel>) {
-		let postsTotal = posts.length;
-		let i = 0;
-		while (i < postsTotal) {
-			console.log('adding posts[i] :: ', JSON.stringify(posts[i]));
-			this.setPost(posts[i]);
-			i++;
-		}
-	}
+	public setId (id:number) {
+	    this.id = id;
+    }
 
-	public setPost (postModel:PostModel) {
-		this.posts.push(new PostModel(postModel));
+	public addPosts (posts:Array<PostModel>) {
+        let postsTotal = posts.length;
+        let i = 0;
+        while (i < postsTotal) {
+            console.log('adding posts[i] :: ', JSON.stringify(posts[i]));
+            this.posts.push(new PostModel(posts[i]));
+            i++;
+        }
 	}
 
 }

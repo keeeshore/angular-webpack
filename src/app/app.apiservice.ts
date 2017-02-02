@@ -27,6 +27,16 @@ export class ApiService {
 			.catch(this.handleError);
 	}
 
+	private fromQueryParams (obj: any) {
+	    let params:string = '';
+	    for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                params += '' + i + '=' + obj[i].toString();
+            }
+        }
+        return params;
+    }
+
 	private extractData(res: Response) {
 		let body = res.json();
 		return body.data || { };
