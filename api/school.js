@@ -100,7 +100,7 @@
 				}
 			}
 
-			var query_params='id,posts.since(' + since + ').until(' + until + ').limit(' + limit + '){full_picture,created_time}';
+			var query_params='id,posts.since(' + since + ').until(' + until + ').limit(' + limit + '){full_picture,description,created_time}';
 			var get_url = fb_url + '?access_token=' + access_token + '&fields=' + query_params;
 			console.log('get_url --------------------> \n' + get_url);
 			console.log('---------------------------> \n');

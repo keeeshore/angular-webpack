@@ -56,7 +56,7 @@ export class AppPostsComponent {
 
 	public updatePosts() {
 		let fromDate = moment().format(this.DATE_TIME_FORMAT);
-		let toDate = moment().subtract(1, 'month').format(this.DATE_TIME_FORMAT);
+		let toDate = moment().add(1, 'month').format(this.DATE_TIME_FORMAT);
 
 		if (moment(this.fromDate, this.DATE_TIME_FORMAT).isValid() && moment(this.toDate, this.DATE_TIME_FORMAT).isValid()
             && (moment(this.fromDate, this.DATE_TIME_FORMAT).isBefore(moment(this.toDate, this.DATE_TIME_FORMAT)))) {
@@ -85,6 +85,8 @@ export class AppPostsComponent {
             console.log('vimonisha posts recieved ' + JSON.stringify(res));
             this.postCollection = new PostCollection(res.id, res.posts, res.until);
             this.fromDate = moment(res.until).add(1, 'm').format(this.DATE_TIME_FORMAT);
+            /*this.toDate = moment(res.until).add(1, 'M').format(this.DATE_TIME_FORMAT); //TODO: update all ..WARNING!!!
+            this.updatePosts();*/
         });
     }
 

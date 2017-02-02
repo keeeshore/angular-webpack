@@ -11,7 +11,7 @@ export class PostModel {
 	constructor (obj:any) {
 		console.log('post Model init.....');
 		this.description = obj.description;
-		this.full_picture = '';//obj.full_picture;
+		this.full_picture = obj.full_picture;
 		this.id = obj.id;
 		this.setCreatedTime(obj.created_time);
 	}
