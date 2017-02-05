@@ -85,11 +85,7 @@ export class AppPostsComponent {
 			//console.log('vimonisha updates posts JSON => ' + JSON.stringify(res));
 			if (res.success) {
 				this.fromDate = moment(res.until).add(1, 'm').format(this.DATE_TIME_FORMAT);
-
-				//if (moment(this.fromDate, this.DATE_TIME_FORMAT).isBefore(moment(this.toDate, this.DATE_TIME_FORMAT))) {
-				//	this.getPosts(true);
-				//}
-
+				this.postCollection = new PostCollection(res.id, res.posts, res.until);
 			} else {
 				this.message = res.error;
 			}

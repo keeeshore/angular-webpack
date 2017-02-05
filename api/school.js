@@ -127,29 +127,39 @@
 						fbData(response.paging.next, false);
 					} else {
 						console.log('response.paging.next NOT present..insertMany.. CRUD...\n', JSON.stringify(response.data));
-						postCollection.insertMany(postsArray, function (err, db) {
-							if (err) {
-								console.log('\nFailed to store posts:::' + JSON.stringify(postsArray));
-								res.json({
-									'success': false,
-									'msg': 'failed to store postCollection in mongo',
-									'err': JSON.stringify(err),
-									'posts': postsArray
-								});
-							} else {							
-								if (postsArray.length > 0) {
-									until = postsArray[0].created_time;
-									id = postsArray[0].id;
+						if (postsArray.length > 0) {
+							postCollection.insertMany(postsArray, function (err, db) {
+								if (err) {
+									console.log('\nFailed to store posts:::' + JSON.stringify(postsArray));
+									res.json({
+										'success': false,
+										'msg': 'failed to store postCollection in mongo',
+										'err': JSON.stringify(err),
+										'posts': postsArray
+									});
+								} else {							
+									if (postsArray.length > 0) {
+										until = postsArray[0].created_time;
+										id = postsArray[0].id;
+									}
+									console.log('\n//DATA under mongo-----------------------------------\n', postsArray[0] , '\n //-----------------------------------\n');
+									res.json({
+										'success': true,
+										'id': postsArray[0].id || 1,
+										'posts': postsArray,
+										'until' : until
+									});
 								}
-								console.log('\n//DATA under mongo-----------------------------------\n', postsArray[0] , '\n //-----------------------------------\n');
-								res.json({
-									'success': true,
-									'id': postsArray[0].id || 1,
-									'posts': postsArray,
-									'until' : until
-								});
-							}
-						});
+							});
+
+						} else {
+							res.json({
+								'success': false,
+								'msg': 'No data to store...in mongodb',
+								'posts': postsArray
+							});
+						}
+						
 					}
 				});
 			}
@@ -174,8 +184,10 @@
 
 					response.on('end', function (err) {
 						data = JSON.parse(buffer);
+						var arr = [];
+						var paging = {};
 						debugger;
-
+						console.log('\nDEFAULT DATA ELSE data -----------------------------------\n', data, '\n----------------------------\n');
 						if (!data || data.error) {
 							console.log('\n//ERROR-----------------------------------\n', data, '\n //-----------------------------------\n');
 							resolve({
@@ -187,11 +199,17 @@
 						} else {
 							if (type) {
 								console.log('\nDATA ELSE [type]-----------------------------------\n', data[type], '\n----------------------------\n');
+								if (data[type] && data[type].data) {
+									arr = data[type].data;
+								}
+								if (data[type] && data[type].paging) {
+									paging = data[type].paging;
+								}
 								resolve({
 									'success': true,
-									'id': data.id,
-									'data': data[type].data,
-									'paging': data[type].paging,
+									'id': data.id || 0,
+									'data': arr,
+									'paging': paging,
 									'type': type
 								});
 							} else {
@@ -199,8 +217,8 @@
 								resolve({
 									'success': true,
 									'id': 9,
-									'data': data.data,
-									'paging': data.paging,
+									'data': data.data || arr,
+									'paging': data.paging || paging,
 									'type': false
 								});
 							}							
