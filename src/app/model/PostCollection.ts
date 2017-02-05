@@ -6,6 +6,8 @@ export class PostCollection implements DataType {
 
 	public posts:Array<PostModel> = [];
 
+	public success:boolean = false;
+
 	public id:number;
 
     public type:DataTypeEnum = DataTypeEnum.POST;
@@ -27,7 +29,7 @@ export class PostCollection implements DataType {
         let postsTotal = posts.length;
         let i = 0;
         while (i < postsTotal) {
-            console.log('adding posts[i] :: ', JSON.stringify(posts[i]));
+            //console.log('adding posts[i] :: ', JSON.stringify(posts[i]));
             this.posts.push(new PostModel(posts[i]));
             i++;
         }

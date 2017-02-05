@@ -9,7 +9,7 @@ export class PostModel {
     public DATE_TIME_FORMAT:string = 'DD-MM-YYYY, HH:mm';
 
 	constructor (obj:any) {
-		console.log('post Model init.....');
+		//console.log('post Model init.....');
 		this.description = obj.description;
 		this.full_picture = obj.full_picture;
 		this.id = obj.id;

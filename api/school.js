@@ -3,15 +3,15 @@
  */
  module.exports = function (app, dbase, mongodb) {
 
-        var moment = require('moment');
-        var https = require("https");
-        var DATE_TIME_FORMAT = 'DD-MM-YYYY, HH:mm';
+ 	var moment = require('moment');
+ 	var https = require("https");
+ 	var DATE_TIME_FORMAT = 'DD-MM-YYYY, HH:mm';
 
 
-        var schoolCollection = dbase.collection('schoolcollection');
-        var classCollection = dbase.collection('classcollection');
-        var postCollection = dbase.collection('postcollection');
-     var vimonisha = dbase.collection('vimonisha');
+ 	var schoolCollection = dbase.collection('schoolcollection');
+ 	var classCollection = dbase.collection('classcollection');
+ 	var postCollection = dbase.collection('postcollection');
+ 	var vimonisha = dbase.collection('vimonisha');
 
  	var fb_url = 'https://graph.facebook.com/v2.8/vimonishaExhibitions';
  	var access_token = 'EAACEdEose0cBAC3lpGLUl2nX1bURYwMbfztjAxMrbQlfYtigAedYZB97ezE19I2QygTL5hSoLsJCoe6R3WaZBTvggudlrvZCWxOCr6aZAmSDzbTCXQabji60Gq46AnZC82CZBmknKDs9uXoIckmdukRmfJlOWOA2AuZA57CGBsnfQZDZD';
@@ -76,84 +76,161 @@
  		});
 
  		app.post('/api/vimonisha/update/posts', function (req, res) {
-			var until = moment().add(1, 'month').unix();
-			var since = moment().unix();
-			var data = '';
-            var limit = 100;
+ 			var until = moment().add(1, 'month').unix();
+ 			var since = moment().unix();
+ 			var postsArray = [];
+ 			var limit = 10;
+ 			var type = 'posts';
 
-			if (req.body) {
-			    limit = req.body.limit || limit;
+ 			if (req.body) {
+ 				limit = req.body.limit || limit;
 
-				if (req.body.until) {
-					until = moment(req.body.until, DATE_TIME_FORMAT).unix();
-					console.log('query.until present 2.....', until);
-				}
+ 				if (req.body.until) {
+ 					until = moment(req.body.until, DATE_TIME_FORMAT).unix();
+ 					console.log('query.until present 2.....', until);
+ 				}
 
-				if (req.body.since) {
-					since = moment(req.body.since, DATE_TIME_FORMAT).unix();
-					console.log('query.since present 2.....', since);
-				}
+ 				if (req.body.since) {
+ 					since = moment(req.body.since, DATE_TIME_FORMAT).unix();
+ 					console.log('query.since present 2.....', since);
+ 				}
 
-				if (req.body.accessToken) {
-					access_token = req.body.accessToken;
-					console.log('accessToken present .....', access_token);
-				}
-			}
+ 				if (req.body.accessToken) {
+ 					access_token = req.body.accessToken;
+ 					console.log('accessToken present .....', access_token);
+ 				}
+ 			}
 
-			var query_params='id,posts.since(' + since + ').until(' + until + ').limit(' + limit + '){full_picture,description,created_time}';
-			var get_url = fb_url + '?access_token=' + access_token + '&fields=' + query_params;
-			console.log('get_url --------------------> \n' + get_url);
-			console.log('---------------------------> \n');
+ 			var query_params='id,posts.since(' + since + ').until(' + until + ').limit(' + limit + '){full_picture,description,created_time}';
+ 			var get_url = fb_url + '?access_token=' + access_token + '&fields=' + query_params;
+ 			console.log('\n GET_URL --------------------> \n' + get_url);
+ 			console.log('\n---------------------------> \n');
 			//https://graph.facebook.com/v2.8/vimonishaExhibitions?
-            // access_token=*****&debug=all&fields=id%2Cname%2Cposts&format=json&method=get&pretty=0&suppress_http_code=1
+			//access_token=*****&debug=all&fields=id%2Cname%2Cposts&format=json&method=get&pretty=0&suppress_http_code=1
 
-			var request = https.get(get_url, function (response) {
-				var buffer = '';
+			debugger;
 
-				response.on('data', function (chunk) {
-					buffer += chunk;
-				}); 
+			function fbData (url, type) {
+				console.log('fbData called :::', url, ' type = ',  type);
 
-				response.on('end', function (err) {
-					console.log(buffer);
-					data = JSON.parse(buffer);
-					console.log('data ====' + data);
-					if (data && data.posts && data.posts.data) {
-						postCollection.insert(data.posts.data, function (err, db) {
+				getFacebookData(url, type).then(function (response) {
+					var i = 0;
+					console.log('response recieved from getFacebookData :::', JSON.stringify(response.data));
+
+					while (i < response.data.length) {
+						postsArray.push(response.data[i]);
+						i++;
+					}
+
+					if (response.paging && response.paging.next) {
+						console.log('\n----response.paging.next present... calling getFacebookData again::' + response.paging.next + '\n');
+						fbData(response.paging.next, false);
+					} else {
+						console.log('response.paging.next NOT present..insertMany.. CRUD...\n', JSON.stringify(response.data));
+						postCollection.insertMany(postsArray, function (err, db) {
 							if (err) {
-								console.log('failed to add posts:::' + JSON.stringify(err));
-								res.json({'success': false, 'err': JSON.stringify(err), 'data': data});
-							} else {
-							    if (data.posts.data.length > 0) {
-							        until = data.posts.data[0].created_time;
-                                }
-								res.json({'success': true, 'id': data.id, 'posts': data.posts.data, 'until' : until});
+								console.log('\nFailed to store posts:::' + JSON.stringify(postsArray));
+								res.json({
+									'success': false,
+									'msg': 'failed to store postCollection in mongo',
+									'err': JSON.stringify(err),
+									'posts': postsArray
+								});
+							} else {							
+								if (postsArray.length > 0) {
+									until = postsArray[0].created_time;
+									id = postsArray[0].id;
+								}
+								console.log('\n//DATA under mongo-----------------------------------\n', postsArray[0] , '\n //-----------------------------------\n');
+								res.json({
+									'success': true,
+									'id': postsArray[0].id || 1,
+									'posts': postsArray,
+									'until' : until
+								});
 							}
 						});
-					} else {
-                        res.json({'success': false, 'err': data});
-                    }
+					}
 				});
+			}
 
-			});
+			fbData(get_url, type);
 
-			request.end();
+
 
 		});
 
-        app.get('/api/vimonisha/get/posts', function (req, res) {
-            console.log('get called...............');
-            postCollection.find().sort({created_time: -1}).toArray(function(err, docs) {
-                console.log('console.log::postCollection find().toArray()-----------' + JSON.stringify(docs));
-                var until = moment().unix();
-                var id = '';
-                if (docs.length > 0) {
-                    until = docs[0].created_time;
-                    id = docs[0]._id;
-                }
-                res.json({'id': id, 'posts': docs, 'until' : until});
-            });
-        })
+ 		function getFacebookData (url, type) {
+ 			var data = '';
+
+ 			return new Promise(function (resolve, reject) {
+
+ 				var request = https.get(url, function (response) {
+	 			var buffer = '';
+
+					response.on('data', function (chunk) {
+						buffer += chunk;
+					});
+
+					response.on('end', function (err) {
+						data = JSON.parse(buffer);
+						debugger;
+
+						if (!data || data.error) {
+							console.log('\n//ERROR-----------------------------------\n', data, '\n //-----------------------------------\n');
+							resolve({
+								'success': false,
+								'error': JSON.stringify(data.error),
+								'data': data,
+								'type': type
+							});
+						} else {
+							if (type) {
+								console.log('\nDATA ELSE [type]-----------------------------------\n', data[type], '\n----------------------------\n');
+								resolve({
+									'success': true,
+									'id': data.id,
+									'data': data[type].data,
+									'paging': data[type].paging,
+									'type': type
+								});
+							} else {
+								console.log('\nDATA ELSE data -----------------------------------\n', data, '\n----------------------------\n');
+								resolve({
+									'success': true,
+									'id': 9,
+									'data': data.data,
+									'paging': data.paging,
+									'type': false
+								});
+							}							
+							
+						}
+					});
+
+	 			});
+
+ 				request.end();
+ 			});
+
+ 		}
+
+ 		app.get('/api/vimonisha/get/posts', function (req, res) {
+ 			console.log('get called...............');
+ 			postCollection.find().sort({created_time: -1}).toArray(function(err, docs) {
+ 				console.log('console.log::postCollection find().toArray()-----------' + JSON.stringify(docs));
+ 				var until = moment().unix();
+ 				var id = '';
+ 				if (docs.length > 0) {
+ 					until = docs[0].created_time;
+ 					id = docs[0]._id;
+ 					res.json({'success': true, 'id': id, 'posts': docs, 'until' : until});
+ 				} else {
+ 					res.json({'success': false, 'id': id, 'posts': [], 'until' :  moment().format()});
+ 				}
+
+ 			});
+ 		});
 
  	}();
 

@@ -89,17 +89,19 @@
                 <div class="col-sm-2">
                     <input type="text" class="form-control" id="toDate" [(ngModel)]="toDate" name="toDate">
                 </div>
+                 <label class="col-sm-1 control-label">Limit</label>
+                <div class="col-sm-1">
+                    <input type="text" class="form-control" id="limit" [(ngModel)]="limit" name="limit">
+                </div>
                 <div class="col-sm-2">
                     <input type="button" class="btn btn-xs btn-warning" value="Update Posts" (click)="updatePosts()">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-2">
                     <input type="button" class="btn btn-xs btn-primary" value="Get Posts" (click)="getPosts()">
                 </div>
             </div>
 		</form>
+	</div>
+	<div class="row">
+		<h2 class="text-danger">{{message}}</h2>
 	</div>
 	<div class="row">
 		<table class="table table-responsive table-striped">
