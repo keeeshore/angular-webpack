@@ -41,7 +41,7 @@ MongoClient.connect(dbUrl, function (err, db) {
         console.log("__dirname:" + __dirname);
         expressApp.use(bodyParser.json()); // for parsing expressApplication/json
 
-        var school = require('./api/school')(expressApp, dbase, mongodb);
+        var schoolApi = require('./api/school')(expressApp, dbase, mongodb);
         var classApi = require('./api/class')(expressApp, dbase, mongodb);
         var postsApi = require('./api/vimonisha')(expressApp, dbase, mongodb);
 
@@ -57,7 +57,6 @@ var server = new WebpackDevServer(compiler, {
     quiet: false,
     noInfo: false,
     publicPath: '',
-    stats: { colors: true },
-    headers: { "Access-Control-Allow-Origin": "*" }
+    stats: { colors: true }
 });
 server.listen(8080);
