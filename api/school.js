@@ -12,7 +12,8 @@ module.exports = function (app, dbase, mongodb) {
     console.log('INIT SCHOOL API');
 
     app.post('/api/schools/add', function (req, res) {
-        console.log("POST----------------- api/schools/add =========== " + req.body);
+        debugger;
+        console.log("POST----------------- api/schools/add =========== " + JSON.stringify(req.body));
         schoolCollection.insert({
             'name': req.body.name,
             'type': req.body.type,
@@ -58,10 +59,11 @@ module.exports = function (app, dbase, mongodb) {
     });
 
     app.get('/api/schools/get', function (req, res) {
-        console.log("GET----------------- api/schools/add =========== " + req.body);
-        console.log('now = ' + moment().format('LLLL'));
+        console.log("GET----------------- api/schools/get =========== ");
         schoolCollection.find().toArray(function(err, docs) {
             console.log('console.log::schoolCollection find().toArray()-----------' + docs);
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.json({'schools': docs});
         });
     });

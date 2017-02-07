@@ -7,8 +7,6 @@ module.exports = webpackMerge(commonConfig, {
   
     devtool: 'cheap-module-eval-source-map',
 
-    devServer: { inline: true },
-
     output: {
         path: helpers.root('dist'),
         publicPath: 'http://localhost:8080/',
