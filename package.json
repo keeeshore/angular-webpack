@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "A webpack starter for Angular",
   "scripts": {
-    "start": "webpack-dev-server --progress",
+    "start": "server.js",
     "start_orig": "webpack-dev-server --inline --progress --port 8080",
     "test": "karma start",
-    "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail"
+    "build": "rimraf dist && webpack",
+    "build-orig": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail"
   },
   "license": "MIT",
   "dependencies": {
@@ -29,6 +30,7 @@
     "proxy-middleware": "^0.15.0",
     "rxjs": "5.0.1",
     "url": "^0.11.0",
+	"webpack": "^1.13.0",
     "webpack-dev-server": "^1.16.2",
     "zone.js": "^0.7.4"
   },
