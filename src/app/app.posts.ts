@@ -45,7 +45,6 @@ export class AppPostsComponent {
 	constructor (private apiService: ApiService) {
 		console.log('posts component init');
 		this.getSchools();
-		//this.getPosts();
 	}
 
 	public getSchools() {

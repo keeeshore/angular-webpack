@@ -5,8 +5,6 @@ import { Observable }     from 'rxjs/Observable';
 @Injectable()
 export class ApiService {
 
-	private heroesUrl = '';
-
 	constructor (private http: Http) {}
 
 	public fetch (url: string) {

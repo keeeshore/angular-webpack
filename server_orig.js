@@ -16,10 +16,7 @@ var dbase;
 
 MongoClient.connect(dbUrl, function (err, db) {
 
-    if (err) {
-        console.log('Unable to connect to : ' + dbUrl + ' error: ' + err);
-    } else {
-
+    if (!err) {
         console.log('connection is OK : ' + dbUrl);
         dbase = db;
 
@@ -29,30 +26,31 @@ MongoClient.connect(dbUrl, function (err, db) {
             console.log('expressApp listening at http://%s:%s', host, port);
         });
 
-        expressApp.use(function(req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            next();
-        });
-
         var school = require('./api/school')(expressApp, dbase, mongodb);
         var classApi = require('./api/class')(expressApp, dbase, mongodb);
         var postsApi = require('./api/vimonisha')(expressApp, dbase, mongodb);
-
-        //expressApp.use('/', proxy(url.parse('http://localhost:8080/')));
-
-        //expressApp.use(express.static('public'));
-        console.log("__dirname:" + __dirname);
-        expressApp.use(bodyParser.json()); // for parsing expressApplication/json
-
-        /*
-         expressApp.get('/', function (req, res) {
-         console.log("expressApp.get(/!*) =========== " + req.url);
-         res.sendFile(__dirname + '/' + req.url + '.html');
-         });
-         */
+        
+    } else {
+        console.log('Unable to connect to : ' + dbUrl + ' error: ' + err);
     }
 
+});
+
+expressApp.use('/public', proxy(url.parse('http://localhost:8080/public')));
+
+expressApp.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+//expressApp.use(express.static('public'));
+console.log("__dirname:" + __dirname);
+expressApp.use(bodyParser.json()); // for parsing expressApplication/json
+
+expressApp.get('/', function (req, res) {
+    console.log("expressApp.get(/!*) =========== " + req.url);
+    res.sendFile(__dirname + '/' + req.url + '.html');
 });
 
 
@@ -62,7 +60,7 @@ var server = new WebpackDevServer(compiler, {
     hot: true,
     quiet: false,
     noInfo: false,
-    publicPath: '',
+    publicPath: '/public',
     stats: { colors: true },
     headers: { "Access-Control-Allow-Origin": "*" }
 });

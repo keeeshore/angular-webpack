@@ -6,7 +6,7 @@ export class PostModel {
 	public created_time:string;
 	public id:number;
 	public description:string;
-    public DATE_TIME_FORMAT:string = 'DD-MM-YYYY, HH:mm';
+    private DATE_TIME_FORMAT:string = 'DD-MM-YYYY, HH:mm';
 
 	constructor (obj:any) {
 		//console.log('post Model init.....');

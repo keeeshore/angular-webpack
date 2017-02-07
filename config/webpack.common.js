@@ -11,6 +11,12 @@ module.exports = {
     'app': ['webpack-dev-server/client?http://localhost:8080/', './src/main.ts' ]
   },
 
+    devServer: {
+        proxy: {
+            "/api": "http://localhost:4000"
+        }
+    },
+
   resolve: {
     extensions: ['', '.ts', '.js']
   },
