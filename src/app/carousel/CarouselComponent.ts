@@ -3,7 +3,7 @@
  */
 import { Component } from '@angular/core';
 import { CarouselItemComponent } from './CarouselItemComponent';
-import {CarouselItem} from "./CarouselItem";
+import { CarouselContainer } from "./CarouselContainer";
 
 @Component({
     selector: 'carousel-component',
@@ -17,12 +17,32 @@ export class CarouselComponent {
     public items:Array<CarouselItemComponent> = [];
 
     constructor () {
-        debugger;
-        console.log('carousel component init...');
+        CarouselContainer.currIndex = 1;
+        console.log('carousel component init...', CarouselContainer.currIndex);
     }
 
     public next () {
-        console.log('next called...');
+        console.log('next called...' + CarouselContainer.items.length);
+        debugger;
+        let currIndex:number = CarouselContainer.currIndex;
+        let newIndex:number = CarouselContainer.currIndex + 1;
+        console.log('currIndex before = ' + currIndex);
+        let item:CarouselItemComponent = CarouselContainer.items[currIndex];
+        if (item) {
+            console.log('item exists = ' + currIndex);
+            item.toggleActive();
+            item.setDataStr(currIndex);
+        }
+        
+        let newItem:CarouselItemComponent = CarouselContainer.items[newIndex];
+        if (newItem) {
+            console.log('item exists = ' + newIndex);
+            newItem.toggleActive();
+            newItem.setDataStr(newIndex);
+            CarouselContainer.currIndex = newIndex;
+        }
+
+        console.log('currIndex after = ' + currIndex);
     }
 
     public prev () {
