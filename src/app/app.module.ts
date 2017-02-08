@@ -8,6 +8,9 @@ import { AppComponent } from './app.component';
 import { AppHeaderComponent } from './app.header';
 import { AppPostsComponent } from './app.posts';
 import { SchoolComponent } from "./school/SchoolComponent";
+import { AppCarousel } from "./app.carousel";
+import { CarouselComponent } from "./carousel/CarouselComponent";
+import { CarouselItemComponent } from "./carousel/CarouselItemComponent";
 
 const appRoutes: Routes = [
     {
@@ -19,12 +22,25 @@ const appRoutes: Routes = [
         component: SchoolComponent,
         data: { title: 'Heroes List' }
     },
+    {
+        path: 'carousel',
+        component: AppCarousel,
+        data: {
+            id: 111,
+            items: [
+                {'itemId': '1', 'itemStr': 'test 1'},
+                {'itemId': '2', 'itemStr': 'test 2'},
+                {'itemId': '3', 'itemStr': 'test 3'},
+                {'itemId': '4', 'itemStr': 'test 4'}
+            ]
+        }
+    },
     { path: 'test',
         redirectTo: '/posts',
         pathMatch: 'full'
     },
     { path: '',
-        component: AppPostsComponent
+        component: AppCarousel
     },
     {
         path: '**',
@@ -41,7 +57,13 @@ const appRoutes: Routes = [
         RouterModule.forRoot(appRoutes)
 	],
 	declarations: [
-		AppComponent, AppHeaderComponent, AppPostsComponent, SchoolComponent
+		AppComponent,
+        AppHeaderComponent,
+        AppPostsComponent,
+        SchoolComponent,
+        AppCarousel,
+        CarouselComponent,
+        CarouselItemComponent
 	],
 	bootstrap: [ AppComponent ],
 	providers: [],

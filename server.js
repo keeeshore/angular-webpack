@@ -13,6 +13,7 @@ var expressApp = express();
 var MongoClient = mongodb.MongoClient;
 var dbUrl = 'mongodb://localhost:27017/test';
 var dbase;
+/*
 
 MongoClient.connect(dbUrl, function (err, db) {
 
@@ -48,6 +49,7 @@ MongoClient.connect(dbUrl, function (err, db) {
     }
 
 });
+*/
 
 
 var server = new WebpackDevServer(compiler, {
