@@ -1,36 +1,39 @@
 /**
  * Created by balank on 8/02/2017.
  */
-import { CarouselItemComponent } from './CarouselItemComponent';
+import { CarouselItem } from './CarouselItem';
+import {CarouselInterface} from "./CarouselInterface";
+import {CarouselComponent} from "./CarouselComponent";
 
-export abstract class CarouselContainer {
+export abstract class CarouselContainer implements CarouselInterface {
 
     public static id: number = 0;
 
-    public static currIndex:number = 0;
+    currIndex:number = 0;
 
-    public static items:Array<CarouselItemComponent> = [];
+    carouselComponent:CarouselComponent;
 
-    constructor () {
-    	console.log('carouselContainer init...');
-        CarouselContainer.id += 1;
+    public static carouselComponent:CarouselComponent;
+
+    public setComponent (carouselComponent:CarouselComponent) {
+        console.log('setComponent::CarouselContainer>>setComponent');
+        CarouselContainer.carouselComponent = carouselComponent;
     }
 
-
-    setItem (item:CarouselItemComponent) {
-    	let currIndex = CarouselContainer.currIndex;
-    	CarouselContainer.items.push(item);
-    	if (CarouselContainer.items[currIndex]) {
-    		CarouselContainer.items[currIndex].isActive = true;
-    	}    	
-    }
-
-    static setActive (indexId:number) {
-    	console.log('carousel container setActive called...');
-    	let currIndex = CarouselContainer.currIndex;
-    	CarouselContainer.items[currIndex].isActive = false;
-    	CarouselContainer.items[indexId].isActive = true;
-    	CarouselContainer.currIndex = indexId;
+    public setItem (item:CarouselItem) {
+        let carouselComp = CarouselContainer.carouselComponent;
+        if (carouselComp) {
+            console.log('setItem::CarouselContainer>>setItem, total = ', carouselComp.items.length);
+            console.log('setItem::CarouselContainer>>id = ', CarouselContainer.id);
+            CarouselContainer.id += 1;
+            let currIndex = carouselComp.currIndex;
+            carouselComp.items.push(item);
+            if (carouselComp.items[currIndex]) {
+                carouselComp.items[currIndex].isActive = true;
+            }
+        } else {
+            console.log('No Carousel component set...');
+        }
     }
 
 }

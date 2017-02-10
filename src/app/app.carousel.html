@@ -1,31 +1,19 @@
-<h1>Carousel container pdata = {{pageData}}</h1>
-<carousel-component>
-    inside carousel component
+<!--<h2>test carousel cont data = {{pageData}}</h2>-->
+<div class="row">
+    <div class="col-sm-12">
+        <input type="button" class="btn btn-xs btn-primary" value="Get Posts" (click)="getPosts()">
+    </div>
+</div>
+<div class="row">
+    <carousel-component *ngIf="carouselComponent">
 
-    <carousel-item>
-        <div style="background-color: #9d9d9d;">
-            inside a carousel item 1......{{pageData}}
-        </div>
-    </carousel-item>
+        <carousel-item *ngFor="let item of carouselComponent.items; let myIndex = index">
+            <div class="col-sm-4"><img class="img img-responsive" src="{{item.data.full_picture}}"></div>
+            <div class="col-sm-8">
+                <div class="text-right"> {{item.data.created_time}}</div>
+                <blockquote>{{item.data.description}}</blockquote>
+            </div>
+        </carousel-item>
 
-    <carousel-item>
-        <div style="background-color: #9d9d9d;">
-            inside a carousel item 2 ......{{pageData}}
-        </div>
-    </carousel-item>
-
-    <carousel-item>
-        <div style="background-color: #9d9d9d;">
-            inside a carousel item 2 ......{{pageData}}
-        </div>
-    </carousel-item>
-
-    <carousel-item>
-        <div style="background-color: #9d9d9d;">
-            inside a carousel item 2 ......{{pageData}}
-        </div>
-    </carousel-item>
-
-
-
-</carousel-component>
+    </carousel-component>
+</div>

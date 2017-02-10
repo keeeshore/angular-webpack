@@ -10,7 +10,7 @@ import { AppPostsComponent } from './app.posts';
 import { SchoolComponent } from "./school/SchoolComponent";
 import { AppCarousel } from "./app.carousel";
 import { CarouselComponent } from "./carousel/CarouselComponent";
-import { CarouselItemComponent } from "./carousel/CarouselItemComponent";
+import { CarouselItem } from "./carousel/CarouselItem";
 
 const appRoutes: Routes = [
     {
@@ -63,7 +63,7 @@ const appRoutes: Routes = [
         SchoolComponent,
         AppCarousel,
         CarouselComponent,
-        CarouselItemComponent
+        CarouselItem
 	],
 	bootstrap: [ AppComponent ],
 	providers: [],

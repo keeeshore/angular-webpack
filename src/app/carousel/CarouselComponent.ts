@@ -1,52 +1,71 @@
 /**
  * Created by balank on 8/02/2017.
  */
-import { Component } from '@angular/core';
-import { CarouselItemComponent } from './CarouselItemComponent';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { CarouselItem } from './CarouselItem';
 import { CarouselContainer } from "./CarouselContainer";
+import {CarouselInterface} from "./CarouselInterface";
 
 @Component({
     selector: 'carousel-component',
     templateUrl: './carousel-component.html'
 })
 
-export class CarouselComponent {
+export class CarouselComponent extends CarouselContainer implements OnInit, AfterViewInit {
     
-    public isAnimActive:boolean = false;
+    public currIndex:number = 0;
 
-    public items:Array<CarouselItemComponent> = [];
+    public items:Array<CarouselItem> = [];
 
     constructor () {
-        CarouselContainer.currIndex = 1;
-        console.log('carousel component init...', CarouselContainer.currIndex);
+        super();
+        console.log('constructor:::CarouselComponent');
+    }
+
+    ngOnInit () {
+        super.setComponent(this);
+        console.log('ngOnInit::CarouselComponent>this.items.length = ', this.items.length);
+    }
+
+    ngAfterViewInit () {
+        console.log('ngAfterViewInit::CarouselComponent>this.items.length = ', this.items.length);
     }
 
     public next () {
-        console.log('next called...' + CarouselContainer.items.length);
-        debugger;
-        let currIndex:number = CarouselContainer.currIndex;
-        let newIndex:number = CarouselContainer.currIndex + 1;
-        console.log('currIndex before = ' + currIndex);
-        let item:CarouselItemComponent = CarouselContainer.items[currIndex];
-        if (item) {
-            console.log('item exists = ' + currIndex);
-            item.toggleActive();
-            item.setDataStr(currIndex);
+        console.log('next called...' + this.items.length);
+        let total:number = this.items.length;
+        let currIndex:number = this.currIndex;
+        let newIndex:number = currIndex + 1 >= total ? 0 : currIndex + 1;
+
+        let currItem:CarouselItem = this.items[currIndex];
+        if (currItem) {
+            currItem.toggleActive();
         }
         
-        let newItem:CarouselItemComponent = CarouselContainer.items[newIndex];
+        let newItem:CarouselItem = this.items[newIndex];
         if (newItem) {
-            console.log('item exists = ' + newIndex);
             newItem.toggleActive();
-            newItem.setDataStr(newIndex);
-            CarouselContainer.currIndex = newIndex;
+            this.currIndex = newIndex;
         }
-
-        console.log('currIndex after = ' + currIndex);
+        this.currIndex = newIndex;
     }
 
     public prev () {
         console.log('prev called...');
+        let total:number = this.items.length;
+        let currIndex:number = this.currIndex;
+        let newIndex:number = currIndex - 1 < 0 ? total - 1 : currIndex - 1;
+
+        let currItem:CarouselItem = this.items[currIndex];
+        if (currItem) {
+            currItem.toggleActive();
+        }
+        let newItem:CarouselItem = this.items[newIndex];
+        if (newItem) {
+            newItem.toggleActive();
+            this.currIndex = newIndex;
+        }
+        this.currIndex = newIndex;
     }
 
 }

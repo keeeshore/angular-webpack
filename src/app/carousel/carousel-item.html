@@ -1,4 +1,3 @@
-<div class="carousel-item" style="background-color: #9d9d9d; margin: 10px;">
-    item contents item str  = {{data.itemStr}}; isActive = {{isActive}}
+<div class="carousel-item {{isActive ? 'show': 'hidden'}}">
     <ng-content></ng-content>
 </div>
