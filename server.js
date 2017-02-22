@@ -11,7 +11,9 @@ var mongodb = require('mongodb');
 
 var expressApp = express();
 var MongoClient = mongodb.MongoClient;
-var dbUrl = 'mongodb://localhost:27017/test';
+//var dbUrl = 'mongodb://localhost:27017/test'; //DEV
+var dbUrl = 'mongodb://userEH6:2Ru0kD7kSeh4vIrc@172.30.66.62:27017/test'; //D?
+//var dbUrl = 'mongodb://kishore:kishore123@kishore-mean-test-4140.mongo.dbs.appsdeck.eu:31049/kishore-mean-test-4140'; //PROD
 var dbase;
 
 
