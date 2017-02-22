@@ -1,0 +1,54 @@
+<!--<h2>test carousel cont data = {{pageData}}</h2>-->
+<div class="row">
+    <div class="col-sm-12">
+        <input type="button" class="btn btn-xs btn-primary" value="Get Posts" (click)="getPosts()">
+        <input type="button" class="btn btn-xs btn-primary" value="Add one" (click)="addOne()">
+        <input type="button" class="btn btn-xs btn-info" value="Open Dialog 1" (click)="openDialog('test-dialog-1')">
+        <input type="button" class="btn btn-xs btn-info" value="Open Dialog 4" (click)="openDialog('test-dialog-4')">
+        <input type="button" class="btn btn-xs btn-info" value="Open Dialog 2 (no 2)" (click)="openDialog('test-dialog-2')">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+
+        <dialog-component id="test-dialog-1">
+            <div class="row">
+                content inside dialog 1 content comes here
+                <input type="button" class="btn btn-xs btn-primary" value="Get Posts" (click)="getPosts()">
+
+                <carousel-component uid="car-comp-1" activeIndex="1">
+
+                    <carousel-item *ngFor="let item of carouselData; let myIndex = index"
+                                   active="{{myIndex === 0}}" (onItemInit)="onItemLoaded()">
+                        <h1>{{item.name}} :{{item.head}} </h1>
+
+                    </carousel-item>
+
+                </carousel-component>
+
+
+            </div>
+        </dialog-component>
+
+
+        <dialog-component id="test-dialog-4">
+            <div class="row">
+                content inside dialog 4 content comes here
+            </div>
+        </dialog-component>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <carousel-component uid="car-comp-1" activeIndex="1">
+
+            <carousel-item *ngFor="let item of carouselData; let myIndex = index"
+                           active="{{myIndex === 0}}" (onItemInit)="onItemLoaded()">
+                <h1>{{item.name}} :{{item.head}} </h1>
+
+            </carousel-item>
+
+        </carousel-component>
+    </div>
+</div>
