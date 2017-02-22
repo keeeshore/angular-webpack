@@ -30,6 +30,36 @@
 	<div class="row">
 		<h2 class="text-danger">{{message}}</h2>
 	</div>
+    <div class="row" >
+        <carousel-component uid="post-comp">
+
+            <carousel-item *ngFor="let postModel of postCollection.posts; let myIndex = index"
+                           active="{{myIndex === 100}}" (onItemInit)="onItemLoaded()">
+
+                <table class="table table-responsive table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-sm-1">#Id</th>
+                        <th>Desc</th>
+                        <th class="col-sm-2">Time</th>
+                    </tr>
+                    </thead>
+                    <tbody >
+                    <tr>
+                        <td>
+                            <img class="img img-responsive" src="{{postModel.full_picture}}">
+                        </td>
+                        <td>{{postModel.description}}</td>
+                        <td>{{postModel.created_time}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </carousel-item>
+
+        </carousel-component>
+    </div>
+
 	<div class="row">
 		<table class="table table-responsive table-striped">
             <thead>
@@ -39,7 +69,7 @@
                     <th class="col-sm-2">Time</th>
                 </tr>
             </thead>
-            <tbody *ngIf="postCollection">
+            <tbody >
                 <tr *ngFor="let postModel of postCollection.posts; let myIndex = index">
                     <td>
                         <img class="img img-responsive" src="{{postModel.full_picture}}">
@@ -49,5 +79,10 @@
                 </tr>
             </tbody>
 		</table>
+
+
+
+
 	</div>
+
 </section>

@@ -2,10 +2,9 @@
  * Created by balank on 8/02/2017.
  */
 import { CarouselItem } from './CarouselItem';
-import {CarouselInterface} from "./CarouselInterface";
 import {CarouselComponent} from "./CarouselComponent";
 
-export abstract class CarouselContainer implements CarouselInterface {
+export abstract class CarouselContainer  {
 
     public static id: number = 0;
 

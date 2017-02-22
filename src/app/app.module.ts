@@ -11,6 +11,9 @@ import { SchoolComponent } from "./school/SchoolComponent";
 import { AppCarousel } from "./app.carousel";
 import { CarouselComponent } from "./carousel/CarouselComponent";
 import { CarouselItem } from "./carousel/CarouselItem";
+import {DialogComponent} from "./dialog/DialogComponent";
+import {DialogService} from "./dialog/DialogService";
+import {ApiService} from "./app.apiservice";
 
 const appRoutes: Routes = [
     {
@@ -61,12 +64,13 @@ const appRoutes: Routes = [
         AppHeaderComponent,
         AppPostsComponent,
         SchoolComponent,
-        AppCarousel,
+        CarouselItem,
         CarouselComponent,
-        CarouselItem
+        AppCarousel,
+        DialogComponent
 	],
 	bootstrap: [ AppComponent ],
-	providers: [],
+	providers: [ApiService, DialogService]
 })
 
 export class AppModule { }

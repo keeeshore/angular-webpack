@@ -1,30 +1,53 @@
 /**
  * Created by balank on 9/02/2017.
  */
-import {Component, OnInit} from '@angular/core';
-import { CarouselComponent } from './CarouselComponent';
-import {CarouselContainer} from "./CarouselContainer";
+import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
+import {CarouselService} from "./CarouselService";
 
 @Component ({
     selector: 'carousel-item',
     templateUrl: './carousel-item.html'
 })
 
-export class CarouselItem extends CarouselContainer implements OnInit {
-
-    public data:any =  {'test': 'none', 'itemId': '001', 'itemStr': 'test 1'};
+export class CarouselItem implements OnInit, AfterViewInit {
 
     public isActive:boolean = false;
 
+    @Input() active:string = 'false';
 
+    @Output() onItemInit:EventEmitter<CarouselItem> = new EventEmitter<CarouselItem>();
+
+    constructor (private carouselService:CarouselService) {
+        console.log('CarouselItem:::constructor', carouselService.id);
+        this.carouselService = carouselService;
+    }
 
     ngOnInit () {
-        console.log('ngOnInit:::item>setting item');
-        super.setItem(this);
+        console.log('CarouselItem::ngOnInit:::active=', this.active);
+        if (this.active == 'true') {
+            console.log('CarouselItem::setting ---------carousel-item-----to active');
+            this.isActive = true;
+        }
+    }
+
+    ngAfterViewInit () {
+        console.log('CarouselItem::ngAfterViewInit:::active', this.active);
+        this.carouselService.broadcast({uid: 2, currIndex: 2, isActive: this.isActive});
+    }
+
+    emitLoad () {
+        console.log('CarouselItem::btn clicked::emitLoad:::');
+        //this.carouselService.broadcast({uid: 2, currIndex: 2, isActive: this.isActive});
+        //this.onItemInit.emit(this);
     }
 
     toggleActive () {
+        console.log('CarouselItem::toggleActive:::');
         this.isActive = !this.isActive;
+    }
+
+    setActive (active:boolean) {
+        this.isActive = active;
     }
 
 }

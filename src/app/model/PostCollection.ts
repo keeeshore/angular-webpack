@@ -14,12 +14,15 @@ export class PostCollection implements DataType {
 
     public until:string;
 
-	constructor (id:number, posts:Array<PostModel>, until:string) {
-		console.log('PostCollection init.....');
-		this.setId(id);
-        this.until = until;
-		this.addPosts(posts);
+	constructor () {
+		console.log('PostCollection::constructor.....');
 	}
+
+	public setPostData (id:number, posts:Array<PostModel>, until:string) {
+        this.setId(id);
+        this.until = until;
+        this.addPosts(posts);
+    }
 
 	public setId (id:number) {
 	    this.id = id;

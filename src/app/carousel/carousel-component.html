@@ -1,4 +1,5 @@
 <div class='carousel-container' style="border: 1px solid #CCC;">
+    uid = {{uid}}
     <div class="carousel">
         <ng-content></ng-content>
     </div>
@@ -8,10 +9,10 @@
     </div>
     <div class="row clearfix">
         <div class="col-sm-12 text-center">
-            Showing {{currIndex}} of {{items.length}}
+            Showing {{currIndex + 1}} of {{carouselItems.length}}
         </div>
         <!--<ul class="carousel-list" style="width: 50%; margin: 0px auto;">
-            <li ng-repeat="item in carouselController.elems track by $index"
+            <li *ngFor="item in carouselController.elems track by $index"
                 class="{{$index === activeIndex ? 'active' : ''}}"
                 ng-click="carouselController.goTo($index)">
             </li>
